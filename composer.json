@@ -1,0 +1,14 @@
+{
+    "name": "comertis/cache-advanced",
+    "description": "A PHP caching system",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Cristian Moraru",
+            "email": "cristian@comertis.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}
