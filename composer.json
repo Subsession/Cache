@@ -1,14 +1,28 @@
 {
-    "name": "comertis/cache-advanced",
-    "description": "A PHP caching system",
-    "type": "library",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Cristian Moraru",
-            "email": "cristian@comertis.com"
-        }
-    ],
-    "minimum-stability": "stable",
-    "require": {}
+  "name": "comertis/cache",
+  "description": "A PHP caching system",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Cristian Moraru",
+      "email": "cristian@comertis.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Comertis\\Cache\\": "src/",
+      "Comertis\\Cache\\Exceptions\\": "src/exceptions",
+      "Comertis\\Cache\\Internal\\": "src/internal",
+      "Comertis\\Cache\\Internal\\Files\\": "src/internal/files",
+      "Comertis\\Cache\\Tests\\": "tests/"
+    }
+  },
+  "minimum-stability": "stable",
+  "require": {
+    "php": ">=7.0.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "7"
+  }
 }

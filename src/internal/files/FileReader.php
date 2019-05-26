@@ -32,7 +32,9 @@
  * @link     https://github.com/Comertis/Cache
  */
 
-namespace Comertis\Cache;
+namespace Comertis\Cache\Internal\Files;
+
+use Comertis\Cache\Internal\Decoder;
 
 /**
  * Undocumented class
@@ -44,24 +46,48 @@ namespace Comertis\Cache;
  * @version  Release: 1.0.0
  * @link     https://github.com/Comertis/Cache
  */
-class Cache
+class FileReader
 {
     /**
-     * Array of CacheFiles
+     * Directory the FileReader is supposed
+     * to read from
      *
      * @access private
-     * @var    array
+     * @var    string
      */
-    private $_files;
+    private $_path;
+
+    /**
+     * Data decoder
+     *
+     * @access private
+     * @var    Comertis\Cache\Internal\Decoder
+     */
+    private $_decoder;
+
+    /**
+     * Necessary read permissions
+     *
+     * @access private
+     * @var    integer
+     */
+    const PERMISSIONS = 0000;
 
     /**
      * Constructor
      *
-     * @param string|null $name Cache name
+     * @param string $path Directory the FileReader is supposed
+     *                     to read from
      */
-    public function __construct($name = null)
+    public function __construct($path = null)
     {
-        $this->_files = [];
+        $this->setPath($path);
+
+        if (!is_null($this->getPath())) {
+            $this->_checkPath();
+        }
+
+        $this->_decoder = new Decoder();
     }
 
     /**
@@ -72,5 +98,61 @@ class Cache
         foreach ($this as $key => $value) {
             unset($this->$key);
         }
+    }
+
+    /**
+     * Get the directory the FileWriter is supposed to
+     * write to
+     *
+     * @access public
+     * @return string
+     */
+    public function getPath()
+    {
+        return $this->_path;
+    }
+
+    /**
+     * Set the directory the FileWriter is supposed
+     * to write to
+     *
+     * @param string $path Directory the FileWriter is supposed
+     *                     to write to
+     *
+     * @access public
+     * @return FileWriter
+     */
+    public function setPath($path)
+    {
+        $this->_path = $path;
+
+        return $this;
+    }
+
+    /**
+     * Check path to ensure it can be written to and
+     * it has necessary permissions
+     *
+     * @access private
+     * @return bool
+     */
+    private function _checkPath()
+    {
+        if (!$this->_isPathReadable()) {
+            throw new FileWriterException("Path is not writable");
+        }
+
+        return true;
+    }
+
+    /**
+     * Check of the path is writable
+     *
+     * @access private
+     * @return bool
+     */
+    private function _isPathReadable()
+    {
+        return is_readable($this->getPath());
     }
 }

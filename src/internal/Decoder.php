@@ -32,39 +32,48 @@
  * @link     https://github.com/Comertis/Cache
  */
 
-namespace Comertis\Cache\Exceptions;
+namespace Comertis\Cache\Internal;
 
 /**
- * Custom exception
+ * Undocumented class
  *
- * @category Exceptions
+ * @category Caching
  * @package  Comertis\Cache
  * @author   Cristian Moraru <cristian@comertis.com>
  * @license  https://opensource.org/licenses/MIT MIT
  * @version  Release: 1.0.0
  * @link     https://github.com/Comertis/Cache
  */
-class CacheException extends Exception
+class Decoder
 {
     /**
      * Constructor
-     *
-     * @param string    $message  Exception message
-     * @param integer   $code     Exception code
-     * @param Exception $previous Previous exception
      */
-    public function __construct($message, $code = 0, Exception $previous = null)
+    public function __construct()
     {
-        parent::__construct($message, $code, $previous);
+
     }
 
     /**
-     * Override __toString
-     *
-     * @return string
+     * Destructor
      */
-    public function __toString()
+    public function __destruct()
     {
-        return __CLASS__ . ": [{$this->code}]: {$this->message}\n";
+        foreach ($this as $key => $value) {
+            unset($this->$key);
+        }
+    }
+
+    /**
+     * Decode data
+     *
+     * @param mixed|string $data Data to decode
+     *
+     * @access public
+     * @return mixed|string
+     */
+    public function decode($data)
+    {
+        return $data;
     }
 }

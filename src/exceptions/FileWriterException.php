@@ -44,7 +44,7 @@ namespace Comertis\Cache\Exceptions;
  * @version  Release: 1.0.0
  * @link     https://github.com/Comertis/Cache
  */
-class CacheException extends Exception
+class FileWriterException extends Exception
 {
     /**
      * Constructor
