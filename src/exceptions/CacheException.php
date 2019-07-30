@@ -34,8 +34,10 @@
 
 namespace Comertis\Cache\Exceptions;
 
+use Psr\Cache\InvalidArgumentException;
+
 /**
- * Custom exception
+ * Exception interface for all exceptions thrown by an Implementing Library.
  *
  * @category Exceptions
  * @package  Comertis\Cache
@@ -44,7 +46,7 @@ namespace Comertis\Cache\Exceptions;
  * @version  Release: 1.0.0
  * @link     https://github.com/Comertis/Cache
  */
-class CacheException extends Exception
+class CacheException implements InvalidArgumentException
 {
     /**
      * Constructor
