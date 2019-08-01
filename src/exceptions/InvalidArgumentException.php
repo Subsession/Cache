@@ -34,19 +34,25 @@
 
 namespace Comertis\Cache\Exceptions;
 
-use Exception;
+use Comertis\Cache\Exceptions\CacheException;
 
 /**
- * Exception interface for all exceptions thrown by an Implementing Library.
+ * CacheItemPoolInterface generates CacheItemInterface objects.
  *
- * @category Exceptions
+ * The primary purpose of Cache\CacheItemPoolInterface is to accept a key from
+ * the Calling Library and return the associated Cache\CacheItemInterface object.
+ * It is also the primary point of interaction with the entire cache collection.
+ * All configuration and initialization of the Pool is left up to an
+ * Implementing Library.
+ *
+ * @category Caching
  * @package  Comertis\Cache
  * @author   Cristian Moraru <cristian@comertis.com>
  * @license  https://opensource.org/licenses/MIT MIT
  * @version  Release: 1.0.0
  * @link     https://github.com/Comertis/Cache
  */
-class CacheException extends Exception implements \Psr\Cache\InvalidArgumentException
+class InvalidArgumentException extends CacheException
 {
 
 }

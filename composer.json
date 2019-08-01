@@ -6,19 +6,21 @@
   "authors": [
     {
       "name": "Cristian Moraru",
-      "email": "cristian@comertis.com"
+      "email": "cristian@comertis.com",
+      "role": "Developer"
     }
   ],
   "autoload": {
     "psr-4": {
       "Comertis\\Cache\\": "src/",
       "Comertis\\Cache\\Exceptions\\": "src/exceptions/",
+      "Comertis\\Cache\\Adapters\\": "src/adapters/",
       "Comertis\\Cache\\Tests\\": "tests/"
     }
   },
   "minimum-stability": "stable",
   "require": {
-    "php": ">=7.0.0",
+    "php": "^7.0.0",
     "psr/cache": "^1.0"
   },
   "require-dev": {

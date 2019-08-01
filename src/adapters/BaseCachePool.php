@@ -32,21 +32,56 @@
  * @link     https://github.com/Comertis/Cache
  */
 
-namespace Comertis\Cache\Exceptions;
+namespace Comertis\Cache\Adapters;
 
-use Exception;
+use Comertis\Cache\Exceptions\InvalidArgumentException;
+use Psr\Cache\CacheItemPoolInterface;
 
 /**
- * Exception interface for all exceptions thrown by an Implementing Library.
+ * CacheItemPoolInterface generates CacheItemInterface objects.
  *
- * @category Exceptions
+ * The primary purpose of Cache\CacheItemPoolInterface is to accept a key from
+ * the Calling Library and return the associated Cache\CacheItemInterface object.
+ * It is also the primary point of interaction with the entire cache collection.
+ * All configuration and initialization of the Pool is left up to an
+ * Implementing Library.
+ *
+ * @category Caching
  * @package  Comertis\Cache
  * @author   Cristian Moraru <cristian@comertis.com>
  * @license  https://opensource.org/licenses/MIT MIT
  * @version  Release: 1.0.0
  * @link     https://github.com/Comertis/Cache
  */
-class CacheException extends Exception implements \Psr\Cache\InvalidArgumentException
+abstract class BaseCachePool implements CacheItemPoolInterface
 {
+    const INVALID_KEY_PATTERN = "{}()/\@:";
 
+    /**
+     * Checks if a key is valid for APCu cache storage
+     *
+     * @param string $key Cache item key
+     *
+     * @throws InvalidArgumentException
+     *   If the $key string is not a legal value a
+     *   \Psr\Cache\InvalidArgumentException MUST be thrown.
+     *
+     * @return bool
+     */
+    protected function assertValidKey($key)
+    {
+        if (!is_string($key)) {
+            throw new InvalidArgumentException("Invalid key");
+        }
+
+        if (preg_match(
+            '/[' . preg_quote(self::INVALID_KEY_PATTERN, '/') . ']/',
+            $key
+        )
+        ) {
+            throw new InvalidArgumentException("Invalid key");
+        }
+
+        return true;
+    }
 }
