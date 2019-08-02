@@ -57,6 +57,10 @@ class CacheBuilder
     const FILE = 1;
     const APCU = 2;
 
+    const DEFAULT_NAME = "DEFAULT";
+
+    private static $_instances = [];
+
     /**
      * Build a CacheItemPoolInterface
      *
@@ -67,33 +71,43 @@ class CacheBuilder
      * @throws CacheException
      * @return CacheItemPoolInterface
      */
-    public static function build($type = null)
+    public static function build($type = null, $name = self::DEFAULT_NAME)
     {
         if (null === $type) {
             return self::_autoDiscovery();
         }
 
+        if (isset(self::$_instances[$type][$name])) {
+            return self::$_instances[$type][$name];
+        }
+
+        $instance = null;
+
         switch ($type) {
             case self::MEMORY:
-                return new MemoryCachePool();
+                $instance = new MemoryCachePool();
 
             case self::APCU:
                 if (!self::_isAPCuAvailable()) {
                     throw new CacheException("APCu is not available: not installed");
                 }
 
-                return new APCuCachePool();
+                $instance = new APCuCachePool();
 
             case self::FILE:
                 if (!self::_isFilesWritable()) {
                     throw new CacheException("Temp dir is not writable");
                 }
 
-                return new FileCachePool();
+                $instance = new FileCachePool();
 
             default:
                 throw new CacheException("Invalid cache pool type");
         }
+
+        self::$_instances[$type][$name] = $instance;
+
+        return $instance;
     }
 
     /**
