@@ -98,18 +98,22 @@ class TwinCachePool extends BaseCachePool
     {
         $this->assertValidKey($key);
 
-        // try to fetch first from local cache
+        // return a new item by default
+        $item = new CacheItem($key);
+
+        // try to fetch from local cache
         if ($this->_local->hasItem($key)) {
-            return $this->_local->getItem($key);
+            $item = $this->_local->getItem($key);
+            
+        // now try the remote cache
+        } else if ($this->_remote->hasItem($key)) {
+            $item = $this->_remote->getItem($key);
+
+            // save the item in the local cache
+            $this->_local->save($item);
         }
 
-        // now on remote
-        if ($this->_remote->hasItem($key)) {
-            return $this->_remote->getItem($key);
-        }
-
-        // not found anywhere
-        return new CacheItem($key);
+        return $item;
     }
 
     /**
