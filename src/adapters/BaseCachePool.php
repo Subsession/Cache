@@ -34,8 +34,8 @@
 
 namespace Comertis\Cache\Adapters;
 
-use Comertis\Cache\Exceptions\InvalidArgumentException;
 use Psr\Cache\CacheItemPoolInterface;
+use Psr\Cache\InvalidArgumentException;
 
 /**
  * CacheItemPoolInterface generates CacheItemInterface objects.
@@ -70,7 +70,7 @@ abstract class BaseCachePool implements CacheItemPoolInterface
      */
     protected function assertValidKey($key)
     {
-        if (!is_string($key)) {
+        if (!is_string($key) || empty($key)) {
             throw new InvalidArgumentException("Invalid key");
         }
 

@@ -61,14 +61,14 @@ class MemoryCachePool extends BaseCachePool
      *
      * @var CacheItemInterface[]
      */
-    private $_stack;
+    private $stack;
 
     /**
      * Deferred storage for items
      *
      * @var CacheItemInterface[]
      */
-    private $_dStack;
+    private $dStack;
 
     /**
      * Returns a Cache Item representing the specified key.
@@ -89,12 +89,12 @@ class MemoryCachePool extends BaseCachePool
     {
         $this->assertValidKey($key);
 
-        if (isset($this->_stack[$key])) {
-            return clone $this->_stack[$key];
+        if (isset($this->stack[$key])) {
+            return clone $this->stack[$key];
         }
 
-        if (isset($this->_dStack[$key])) {
-            return clone $this->_dStack[$key];
+        if (isset($this->dStack[$key])) {
+            return clone $this->dStack[$key];
         }
 
         return new CacheItem($key);
@@ -119,9 +119,9 @@ class MemoryCachePool extends BaseCachePool
     {
         $items = [];
 
-        foreach ($keys as $key) {
-            $this->assertValidKey($key);
-            $items[$key] = $this->getItem($key);
+        foreach ($keys as $key => $value) {
+            $this->assertValidKey($value);
+            $items[$value] = $this->getItem($value);
         }
 
         return $items;
@@ -147,12 +147,12 @@ class MemoryCachePool extends BaseCachePool
     {
         $this->assertValidKey($key);
 
-        $itemInDeferredNotExpired = isset($this->_dStack[$key]) &&
-        $this->_dStack[$key]->isHit();
+        $itemInDeferredNotExpired = isset($this->dStack[$key]) &&
+        $this->dStack[$key]->isHit();
 
         return (
             $itemInDeferredNotExpired ||
-            (isset($this->_stack[$key]) && $this->_stack[$key]->isHit())
+            (isset($this->stack[$key]) && $this->stack[$key]->isHit())
         );
     }
 
@@ -164,8 +164,8 @@ class MemoryCachePool extends BaseCachePool
      */
     public function clear()
     {
-        $this->_stack = [];
-        $this->_dStack = [];
+        $this->stack = [];
+        $this->dStack = [];
 
         return true;
     }
@@ -186,12 +186,12 @@ class MemoryCachePool extends BaseCachePool
     {
         $this->assertValidKey($key);
 
-        if (isset($this->_stack[$key])) {
-            unset($this->_stack[$key]);
+        if (isset($this->stack[$key])) {
+            unset($this->stack[$key]);
         }
 
-        if (isset($this->_dStack[$key])) {
-            unset($this->_dStack[$key]);
+        if (isset($this->dStack[$key])) {
+            unset($this->dStack[$key]);
         }
 
         return true;
@@ -213,9 +213,9 @@ class MemoryCachePool extends BaseCachePool
     {
         $result = true;
 
-        foreach ($keys as $key) {
-            $this->assertValidKey($key);
-            $result = $result && $this->deleteItem($key);
+        foreach ($keys as $key => $value) {
+            $this->assertValidKey($value);
+            $result = $result && $this->deleteItem($value);
         }
 
         return $result;
@@ -235,7 +235,7 @@ class MemoryCachePool extends BaseCachePool
             return false;
         }
 
-        $this->_stack[$item->getKey()] = $item;
+        $this->stack[$item->getKey()] = $item;
 
         return true;
     }
@@ -251,7 +251,7 @@ class MemoryCachePool extends BaseCachePool
      */
     public function saveDeferred(CacheItemInterface $item)
     {
-        $this->_dStack[$item->getKey()] = $item;
+        $this->dStack[$item->getKey()] = $item;
 
         return true;
     }
@@ -265,9 +265,9 @@ class MemoryCachePool extends BaseCachePool
      */
     public function commit()
     {
-        foreach ($this->_dStack as $key => $item) {
+        foreach ($this->dStack as $key => $item) {
             $this->save($item);
-            unset($this->_dStack[$key]);
+            unset($this->dStack[$key]);
         }
 
         return true;

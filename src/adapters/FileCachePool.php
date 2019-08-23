@@ -179,7 +179,7 @@ class FileCachePool extends BaseCachePool
         $this->_dStack = [];
 
         $result = true;
-        foreach (glob($this->getFolder() . '/' . '*') as $filename) {
+        foreach (glob($this->getFolder() . '/' . '*') as $key => $filename) {
             $result = $result && unlink($filename);
         }
 
@@ -227,9 +227,9 @@ class FileCachePool extends BaseCachePool
     {
         $result = true;
 
-        foreach ($keys as $key) {
-            $this->assertValidKey($key);
-            $result = $result && $this->deleteItem($key);
+        foreach ($keys as $key => $value) {
+            $this->assertValidKey($value);
+            $result = $result && $this->deleteItem($value);
         }
 
         return $result;

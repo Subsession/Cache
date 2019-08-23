@@ -56,14 +56,14 @@ class TwinCachePool extends BaseCachePool
      *
      * @var CacheItemPoolInterface
      */
-    private $_local;
+    private $local;
 
     /**
      * Remote cache pool instance
      *
      * @var CacheItemPoolInterface
      */
-    private $_remote;
+    private $remote;
 
     /**
      * TwinCachePool constructor.
@@ -75,8 +75,8 @@ class TwinCachePool extends BaseCachePool
         CacheItemPoolInterface $local,
         CacheItemPoolInterface $remote
     ) {
-        $this->_local = $local;
-        $this->_remote = $remote;
+        $this->local = $local;
+        $this->remote = $remote;
     }
 
     /**
@@ -102,15 +102,15 @@ class TwinCachePool extends BaseCachePool
         $item = new CacheItem($key);
 
         // try to fetch from local cache
-        if ($this->_local->hasItem($key)) {
-            $item = $this->_local->getItem($key);
-            
-        // now try the remote cache
-        } else if ($this->_remote->hasItem($key)) {
-            $item = $this->_remote->getItem($key);
+        if ($this->local->hasItem($key)) {
+            $item = $this->local->getItem($key);
+
+            // now try the remote cache
+        } else if ($this->remote->hasItem($key)) {
+            $item = $this->remote->getItem($key);
 
             // save the item in the local cache
-            $this->_local->save($item);
+            $this->local->save($item);
         }
 
         return $item;
@@ -166,7 +166,7 @@ class TwinCachePool extends BaseCachePool
     {
         $this->assertValidKey($key);
 
-        if ($this->_local->hasItem($key) || $this->_remote->hasItem($key)) {
+        if ($this->local->hasItem($key) || $this->remote->hasItem($key)) {
             return true;
         }
 
@@ -181,7 +181,7 @@ class TwinCachePool extends BaseCachePool
      */
     public function clear()
     {
-        return ($this->_local->clear() && $this->_remote->clear());
+        return ($this->local->clear() && $this->remote->clear());
     }
 
     /**
@@ -200,7 +200,7 @@ class TwinCachePool extends BaseCachePool
     {
         $this->assertValidKey($key);
 
-        return ($this->_local->deleteItem($key) && $this->_remote->deleteItem($key));
+        return ($this->local->deleteItem($key) && $this->remote->deleteItem($key));
     }
 
     /**
@@ -219,9 +219,9 @@ class TwinCachePool extends BaseCachePool
     {
         $result = true;
 
-        foreach ($keys as $key) {
-            $this->assertValidKey($key);
-            $result = $result && $this->deleteItem($key);
+        foreach ($keys as $key => $value) {
+            $this->assertValidKey($value);
+            $result = $result && $this->deleteItem($value);
         }
 
         return $result;
@@ -241,7 +241,7 @@ class TwinCachePool extends BaseCachePool
             return false;
         }
 
-        return ($this->_local->save($item) && $this->_remote->save($item));
+        return ($this->local->save($item) && $this->remote->save($item));
     }
 
     /**
@@ -255,8 +255,8 @@ class TwinCachePool extends BaseCachePool
      */
     public function saveDeferred(CacheItemInterface $item)
     {
-        return ($this->_local->saveDeferred($item) &&
-            $this->_remote->saveDeferred($item));
+        return ($this->local->saveDeferred($item) &&
+            $this->remote->saveDeferred($item));
     }
 
     /**
@@ -268,6 +268,6 @@ class TwinCachePool extends BaseCachePool
      */
     public function commit()
     {
-        return ($this->_local->commit() && $this->_remote->commit());
+        return ($this->local->commit() && $this->remote->commit());
     }
 }
