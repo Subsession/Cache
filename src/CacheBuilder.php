@@ -25,26 +25,26 @@
  * DEALINGS IN THE SOFTWARE.
  *
  * @category Caching
- * @package  Comertis\Cache
- * @author   Cristian Moraru <cristian@comertis.com>
+ * @package  Subsession\Cache
+ * @author   Cristian Moraru <cristian.moraru@live.com>
  * @license  https://opensource.org/licenses/MIT MIT
  * @version  GIT: &Id&
- * @link     https://github.com/Comertis/Cache
+ * @link     https://github.com/Subsession/Cache
  */
 
-namespace Comertis\Cache;
+namespace Subsession\Cache;
 
-use Comertis\Cache\Internal\Files\FileManager;
+use Subsession\Cache\Internal\Files\FileManager;
 
 /**
  * Internal class responsible for handling cache files
  *
  * @category Caching
- * @package  Comertis\Cache
- * @author   Cristian Moraru <cristian@comertis.com>
+ * @package  Subsession\Cache
+ * @author   Cristian Moraru <cristian.moraru@live.com>
  * @license  https://opensource.org/licenses/MIT MIT
  * @version  Release: 1.0.0
- * @link     https://github.com/Comertis/Cache
+ * @link     https://github.com/Subsession/Cache
  */
 class CacheBuilder
 {
@@ -54,7 +54,7 @@ class CacheBuilder
      * @access private
      * @var    FileManager
      */
-    private $_fileManager;
+    private $fileManager;
 
     /**
      * Directory for cache files
@@ -62,7 +62,7 @@ class CacheBuilder
      * @access private
      * @var    string
      */
-    private static $_path;
+    private static $path;
 
     /**
      * Internal array of Cache keys and their CacheConfiguration
@@ -71,7 +71,7 @@ class CacheBuilder
      * @access private
      * @var    array
      */
-    private static $_instances = [];
+    private static $instances = [];
 
     /**
      * Default directory for cache files
@@ -91,13 +91,13 @@ class CacheBuilder
 
     /**
      * Constructor defaults:
-     *      $this->_fileManager = new FileManager();
-     *      $this->_path = self::DEFAULT_PATH;
+     *      $this->fileManager = new FileManager();
+     *      $this->path = self::DEFAULT_PATH;
      */
     public function __construct()
     {
-        $this->_fileManager = new FileManager();
-        $this->_path = self::DEFAULT_PATH;
+        $this->fileManager = new FileManager();
+        $this->path = self::DEFAULT_PATH;
     }
 
     /**
@@ -118,7 +118,7 @@ class CacheBuilder
      */
     public function getPath()
     {
-        return $this->_path;
+        return $this->path;
     }
 
     /**
@@ -131,8 +131,8 @@ class CacheBuilder
      */
     public function setPath($path)
     {
-        $this->_path = $path;
-        $this->_fileManager->setPath($path);
+        $this->path = $path;
+        $this->fileManager->setPath($path);
 
         return $this;
     }
@@ -151,6 +151,6 @@ class CacheBuilder
     {
         $instance = new Cache($name);
 
-        self::$_instances[$name] = $configuration;
+        self::$instances[$name] = $configuration;
     }
 }

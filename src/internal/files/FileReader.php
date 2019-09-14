@@ -25,26 +25,26 @@
  * DEALINGS IN THE SOFTWARE.
  *
  * @category Caching
- * @package  Comertis\Cache
- * @author   Cristian Moraru <cristian@comertis.com>
+ * @package  Subsession\Cache
+ * @author   Cristian Moraru <cristian.moraru@live.com>
  * @license  https://opensource.org/licenses/MIT MIT
  * @version  GIT: &Id&
- * @link     https://github.com/Comertis/Cache
+ * @link     https://github.com/Subsession/Cache
  */
 
-namespace Comertis\Cache\Internal\Files;
+namespace Subsession\Cache\Internal\Files;
 
-use Comertis\Cache\Internal\Decoder;
+use Subsession\Cache\Internal\Decoder;
 
 /**
  * Undocumented class
  *
  * @category Caching
- * @package  Comertis\Cache
- * @author   Cristian Moraru <cristian@comertis.com>
+ * @package  Subsession\Cache
+ * @author   Cristian Moraru <cristian.moraru@live.com>
  * @license  https://opensource.org/licenses/MIT MIT
  * @version  Release: 1.0.0
- * @link     https://github.com/Comertis/Cache
+ * @link     https://github.com/Subsession/Cache
  */
 class FileReader
 {
@@ -55,15 +55,15 @@ class FileReader
      * @access private
      * @var    string
      */
-    private $_path;
+    private $path;
 
     /**
      * Data decoder
      *
      * @access private
-     * @var    Comertis\Cache\Internal\Decoder
+     * @var    Subsession\Cache\Internal\Decoder
      */
-    private $_decoder;
+    private $decoder;
 
     /**
      * Necessary read permissions
@@ -84,10 +84,10 @@ class FileReader
         $this->setPath($path);
 
         if (!is_null($this->getPath())) {
-            $this->_checkPath();
+            $this->checkPath();
         }
 
-        $this->_decoder = new Decoder();
+        $this->decoder = new Decoder();
     }
 
     /**
@@ -109,7 +109,7 @@ class FileReader
      */
     public function getPath()
     {
-        return $this->_path;
+        return $this->path;
     }
 
     /**
@@ -124,7 +124,7 @@ class FileReader
      */
     public function setPath($path)
     {
-        $this->_path = $path;
+        $this->path = $path;
 
         return $this;
     }
@@ -136,9 +136,9 @@ class FileReader
      * @access private
      * @return bool
      */
-    private function _checkPath()
+    private function checkPath()
     {
-        if (!$this->_isPathReadable()) {
+        if (!$this->isPathReadable()) {
             throw new FileWriterException("Path is not writable");
         }
 
@@ -151,7 +151,7 @@ class FileReader
      * @access private
      * @return bool
      */
-    private function _isPathReadable()
+    private function isPathReadable()
     {
         return is_readable($this->getPath());
     }

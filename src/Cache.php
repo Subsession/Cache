@@ -25,24 +25,24 @@
  * DEALINGS IN THE SOFTWARE.
  *
  * @category Caching
- * @package  Comertis\Cache
- * @author   Cristian Moraru <cristian@comertis.com>
+ * @package  Subsession\Cache
+ * @author   Cristian Moraru <cristian.moraru@live.com>
  * @license  https://opensource.org/licenses/MIT MIT
  * @version  GIT: &Id&
- * @link     https://github.com/Comertis/Cache
+ * @link     https://github.com/Subsession/Cache
  */
 
-namespace Comertis\Cache;
+namespace Subsession\Cache;
 
 /**
  * Undocumented class
  *
  * @category Caching
- * @package  Comertis\Cache
- * @author   Cristian Moraru <cristian@comertis.com>
+ * @package  Subsession\Cache
+ * @author   Cristian Moraru <cristian.moraru@live.com>
  * @license  https://opensource.org/licenses/MIT MIT
  * @version  Release: 1.0.0
- * @link     https://github.com/Comertis/Cache
+ * @link     https://github.com/Subsession/Cache
  */
 class Cache
 {
@@ -52,7 +52,7 @@ class Cache
      * @access private
      * @var    array
      */
-    private $_files;
+    private $files;
 
     /**
      * Constructor
@@ -61,7 +61,7 @@ class Cache
      */
     public function __construct($name = null)
     {
-        $this->_files = [];
+        $this->files = [];
     }
 
     /**

@@ -25,24 +25,24 @@
  * DEALINGS IN THE SOFTWARE.
  *
  * @category Caching
- * @package  Comertis\Cache
- * @author   Cristian Moraru <cristian@comertis.com>
+ * @package  Subsession\Cache
+ * @author   Cristian Moraru <cristian.moraru@live.com>
  * @license  https://opensource.org/licenses/MIT MIT
  * @version  GIT: &Id&
- * @link     https://github.com/Comertis/Cache
+ * @link     https://github.com/Subsession/Cache
  */
 
-namespace Comertis\Cache\Internal\Files;
+namespace Subsession\Cache\Internal\Files;
 
 /**
  * Undocumented class
  *
  * @category Caching
- * @package  Comertis\Cache
- * @author   Cristian Moraru <cristian@comertis.com>
+ * @package  Subsession\Cache
+ * @author   Cristian Moraru <cristian.moraru@live.com>
  * @license  https://opensource.org/licenses/MIT MIT
  * @version  Release: 1.0.0
- * @link     https://github.com/Comertis/Cache
+ * @link     https://github.com/Subsession/Cache
  */
 class CacheFile
 {
@@ -52,7 +52,7 @@ class CacheFile
      * @access private
      * @var    string
      */
-    private $_key;
+    private $key;
 
     /**
      * File creation date
@@ -60,7 +60,7 @@ class CacheFile
      * @access private
      * @var    string
      */
-    private $_creationDate;
+    private $creationDate;
 
     /**
      * File expire date
@@ -68,7 +68,7 @@ class CacheFile
      * @access private
      * @var    string
      */
-    private $_expireDate;
+    private $expireDate;
 
     /**
      * File data
@@ -76,14 +76,14 @@ class CacheFile
      * @access private
      * @var    mixed|string
      */
-    private $_data;
+    private $data;
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->_creationDate = (new \DateTime())->format("dd/MM/yyyy HH:mm:ss");
+        $this->creationDate = (new \DateTime())->format("dd/MM/yyyy HH:mm:ss");
     }
 
     /**
@@ -104,7 +104,7 @@ class CacheFile
      */
     public function getKey()
     {
-        return $this->_key;
+        return $this->key;
     }
 
     /**
@@ -117,7 +117,7 @@ class CacheFile
      */
     public function setKey($key)
     {
-        $this->_key = $key;
+        $this->key = $key;
 
         return $this;
     }
@@ -130,7 +130,7 @@ class CacheFile
      */
     public function getCreationDate()
     {
-        return $this->_creationDate;
+        return $this->creationDate;
     }
 
     /**
@@ -143,7 +143,7 @@ class CacheFile
      */
     public function setCreationDate($creationDate)
     {
-        $this->_creationDate = $creationDate;
+        $this->creationDate = $creationDate;
 
         return $this;
     }
@@ -156,7 +156,7 @@ class CacheFile
      */
     public function getExpireDate()
     {
-        return $this->_expireDate;
+        return $this->expireDate;
     }
 
     /**
@@ -169,7 +169,7 @@ class CacheFile
      */
     public function setExpireDate($expireDate)
     {
-        $this->_expireDate = $expireDate;
+        $this->expireDate = $expireDate;
 
         return $this;
     }
@@ -182,7 +182,7 @@ class CacheFile
      */
     public function getData()
     {
-        return $this->_data;
+        return $this->data;
     }
 
     /**
@@ -195,7 +195,7 @@ class CacheFile
      */
     public function setData($data)
     {
-        $this->_data = $data;
+        $this->data = $data;
 
         return $this;
     }

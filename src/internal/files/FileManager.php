@@ -25,29 +25,29 @@
  * DEALINGS IN THE SOFTWARE.
  *
  * @category Caching
- * @package  Comertis\Cache
- * @author   Cristian Moraru <cristian@comertis.com>
+ * @package  Subsession\Cache
+ * @author   Cristian Moraru <cristian.moraru@live.com>
  * @license  https://opensource.org/licenses/MIT MIT
  * @version  GIT: &Id&
- * @link     https://github.com/Comertis/Cache
+ * @link     https://github.com/Subsession/Cache
  */
 
-namespace Comertis\Cache\Internal\Files;
+namespace Subsession\Cache\Internal\Files;
 
-use Comertis\Cache\Exceptions\CacheException;
-use Comertis\Cache\Internal\Files\CacheFile;
-use Comertis\Cache\Internal\Files\FileReader;
-use Comertis\Cache\Internal\Files\FileWriter;
+use Subsession\Cache\Exceptions\CacheException;
+use Subsession\Cache\Internal\Files\CacheFile;
+use Subsession\Cache\Internal\Files\FileReader;
+use Subsession\Cache\Internal\Files\FileWriter;
 
 /**
  * Responsible for handling CacheFile writes/reads/creation
  *
  * @category Caching
- * @package  Comertis\Cache
- * @author   Cristian Moraru <cristian@comertis.com>
+ * @package  Subsession\Cache
+ * @author   Cristian Moraru <cristian.moraru@live.com>
  * @license  https://opensource.org/licenses/MIT MIT
  * @version  Release: 1.0.0
- * @link     https://github.com/Comertis/Cache
+ * @link     https://github.com/Subsession/Cache
  */
 class FileManager
 {
@@ -57,15 +57,15 @@ class FileManager
      * @access private
      * @var    string
      */
-    private $_path;
+    private $path;
 
     /**
-     * FileReader instante
+     * FileReader instance
      *
      * @access private
      * @var    FileReader
      */
-    private $_fileReader;
+    private $fileReader;
 
     /**
      * FileWriter instance
@@ -73,7 +73,7 @@ class FileManager
      * @access private
      * @var    FileWriter
      */
-    private $_fileWriter;
+    private $fileWriter;
 
     /**
      * Necessary permissions for path
@@ -87,8 +87,8 @@ class FileManager
      */
     public function __construct()
     {
-        $this->_fileReader = new FileReader();
-        $this->_fileWriter = new FileWriter();
+        $this->fileReader = new FileReader();
+        $this->fileWriter = new FileWriter();
     }
 
     /**
@@ -108,7 +108,7 @@ class FileManager
      */
     public function getPath()
     {
-        return $this->_path;
+        return $this->path;
     }
 
     /**
@@ -121,9 +121,9 @@ class FileManager
      */
     public function setPath($path)
     {
-        $this->_path = $path;
-        $this->_fileReader->setPath($path);
-        $this->_fileWriter->setPath($path);
+        $this->path = $path;
+        $this->fileReader->setPath($path);
+        $this->fileWriter->setPath($path);
 
         return $this;
     }
@@ -138,7 +138,7 @@ class FileManager
      */
     public function save(CacheFile $cacheFile)
     {
-
+        //
     }
 
     /**
@@ -147,13 +147,13 @@ class FileManager
      * @access private
      * @return boolean
      */
-    private function _checkCachePath()
+    private function checkCachePath()
     {
         if (!is_dir($this->getPath())) {
-            $this->_createCachePath();
+            $this->createCachePath();
         }
 
-        if (!$this->_checkCachePathPermission()) {
+        if (!$this->checkCachePathPermission()) {
             return false;
         }
 
@@ -167,7 +167,7 @@ class FileManager
      * @throws CacheException
      * @return boolean
      */
-    private function _createCachePath()
+    private function createCachePath()
     {
         $result = mkdir($this->getPath(), self::PERMISSIONS, true);
 

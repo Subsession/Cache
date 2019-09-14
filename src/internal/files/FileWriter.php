@@ -25,27 +25,27 @@
  * DEALINGS IN THE SOFTWARE.
  *
  * @category Caching
- * @package  Comertis\Cache
- * @author   Cristian Moraru <cristian@comertis.com>
+ * @package  Subsession\Cache
+ * @author   Cristian Moraru <cristian.moraru@live.com>
  * @license  https://opensource.org/licenses/MIT MIT
  * @version  GIT: &Id&
- * @link     https://github.com/Comertis/Cache
+ * @link     https://github.com/Subsession/Cache
  */
 
-namespace Comertis\Cache\Internal\Files;
+namespace Subsession\Cache\Internal\Files;
 
-use Comertis\Cache\Exceptions\FileWriterException;
-use Comertis\Cache\Internal\Encoder;
+use Subsession\Cache\Exceptions\FileWriterException;
+use Subsession\Cache\Internal\Encoder;
 
 /**
  * Undocumented class
  *
  * @category Caching
- * @package  Comertis\Cache
- * @author   Cristian Moraru <cristian@comertis.com>
+ * @package  Subsession\Cache
+ * @author   Cristian Moraru <cristian.moraru@live.com>
  * @license  https://opensource.org/licenses/MIT MIT
  * @version  Release: 1.0.0
- * @link     https://github.com/Comertis/Cache
+ * @link     https://github.com/Subsession/Cache
  */
 class FileWriter
 {
@@ -56,18 +56,18 @@ class FileWriter
      * @access private
      * @var    string
      */
-    private $_path;
+    private $path;
 
     /**
      * Data encoder
      *
      * @access private
-     * @var    Comertis\Cache\Internal\Encoder
+     * @var    Subsession\Cache\Internal\Encoder
      */
-    private $_encoder;
+    private $encoder;
 
     /**
-     * Necessary directoy permissions
+     * Necessary directory permissions
      *
      * @access private
      * @var    integer
@@ -85,10 +85,10 @@ class FileWriter
         $this->setPath($path);
 
         if (!is_null($this->getPath())) {
-            $this->_checkPath();
+            $this->checkPath();
         }
 
-        $this->_encoder = new Encoder();
+        $this->encoder = new Encoder();
     }
 
     /**
@@ -110,7 +110,7 @@ class FileWriter
      */
     public function getPath()
     {
-        return $this->_path;
+        return $this->path;
     }
 
     /**
@@ -125,7 +125,7 @@ class FileWriter
      */
     public function setPath($path)
     {
-        $this->_path = $path;
+        $this->path = $path;
 
         return $this;
     }
@@ -137,13 +137,13 @@ class FileWriter
      * @access private
      * @return bool
      */
-    private function _checkPath()
+    private function checkPath()
     {
-        if (!$this->_isPathWritable()) {
+        if (!$this->isPathWritable()) {
             throw new FileWriterException("Path is not writable");
         }
 
-        if (!$this->_checkPathPermissions()) {
+        if (!$this->checkPathPermissions()) {
             throw new FileWriterException("Missing necessary permissions");
         }
 
@@ -156,7 +156,7 @@ class FileWriter
      * @access private
      * @return bool
      */
-    private function _isPathWritable()
+    private function isPathWritable()
     {
         return is_writable($this->getPath());
     }
@@ -167,7 +167,7 @@ class FileWriter
      * @access private
      * @return bool
      */
-    private function _checkPathPermissions()
+    private function checkPathPermissions()
     {
         return chmod($this->getPath(), self::PERMISSIONS);
     }

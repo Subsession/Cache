@@ -25,24 +25,24 @@
  * DEALINGS IN THE SOFTWARE.
  *
  * @category Caching
- * @package  Comertis\Cache
- * @author   Cristian Moraru <cristian@comertis.com>
+ * @package  Subsession\Cache
+ * @author   Cristian Moraru <cristian.moraru@live.com>
  * @license  https://opensource.org/licenses/MIT MIT
  * @version  GIT: &Id&
- * @link     https://github.com/Comertis/Cache
+ * @link     https://github.com/Subsession/Cache
  */
 
-namespace Comertis\Cache\Internal;
+namespace Subsession\Cache\Internal;
 
 /**
  * Internal class responsible for handling cache configuration
  *
  * @category Caching
- * @package  Comertis\Cache
- * @author   Cristian Moraru <cristian@comertis.com>
+ * @package  Subsession\Cache
+ * @author   Cristian Moraru <cristian.moraru@live.com>
  * @license  https://opensource.org/licenses/MIT MIT
  * @version  Release: 1.0.0
- * @link     https://github.com/Comertis/Cache
+ * @link     https://github.com/Subsession/Cache
  */
 class CacheConfiguration
 {
@@ -52,7 +52,7 @@ class CacheConfiguration
      * @access private
      * @var    string
      */
-    private $_name;
+    private $name;
 
     /**
      * Default files extension for cache files
@@ -60,7 +60,7 @@ class CacheConfiguration
      * @access private
      * @var    string
      */
-    private $_extension;
+    private $extension;
 
     /**
      * Default time for cache files to expire
@@ -68,7 +68,7 @@ class CacheConfiguration
      * @access private
      * @var    string
      */
-    private $_expireTime;
+    private $expireTime;
 
     /**
      * Default extension for cache files
@@ -96,19 +96,19 @@ class CacheConfiguration
 
     /**
      * Constructor defaults:
-     *      $this->_extension = self::DEFAULT_EXTENSION;
-     *      $this->_name = self::DEFAULT_NAME;
+     *      $this->extension = self::DEFAULT_EXTENSION;
+     *      $this->name = self::DEFAULT_NAME;
      *      $this->_expiteTime = (new \DateTime())
      *          ->add(new \DateInterval(self::DATEINTERVAL_10M))
      *          ->format(self::DATETIME_FORMAT);
      */
     public function __construct()
     {
-        $this->_extension = self::DEFAULT_EXTENSION;
-        $this->_name = self::DEFAULT_NAME;
+        $this->extension = self::DEFAULT_EXTENSION;
+        $this->name = self::DEFAULT_NAME;
 
         // Expire time is set to current DateTime + 10 minutes
-        $this->_expireTime = (new \DateTime())
+        $this->expireTime = (new \DateTime())
             ->add(new \DateInterval(self::DATEINTERVAL_10M))
             ->format(self::DATETIME_FORMAT);
     }
@@ -121,7 +121,7 @@ class CacheConfiguration
      */
     public function getExtension()
     {
-        return $this->_extension;
+        return $this->extension;
     }
 
     /**
@@ -134,7 +134,7 @@ class CacheConfiguration
      */
     public function setExtension($extension)
     {
-        $this->_extension = $extension;
+        $this->extension = $extension;
 
         return $this;
     }
@@ -147,7 +147,7 @@ class CacheConfiguration
      */
     public function getName()
     {
-        return $this->_name;
+        return $this->name;
     }
 
     /**
@@ -160,7 +160,7 @@ class CacheConfiguration
      */
     public function setName($name)
     {
-        $this->_name = $name;
+        $this->name = $name;
 
         return $this;
     }
@@ -173,7 +173,7 @@ class CacheConfiguration
      */
     public function getExpireTime()
     {
-        return $this->_expireTime;
+        return $this->expireTime;
     }
 
     /**
@@ -187,7 +187,7 @@ class CacheConfiguration
      */
     public function setExpireTime($expireTime = null)
     {
-        $this->_expireTime = $expireTime;
+        $this->expireTime = $expireTime;
 
         return $this;
     }
