@@ -25,27 +25,27 @@
  * DEALINGS IN THE SOFTWARE.
  *
  * @category Caching
- * @package  Comertis\Cache
- * @author   Cristian Moraru <cristian@comertis.com>
+ * @package  Subsession\Cache
+ * @author   Cristian Moraru <cristian.moraru@live.com>
  * @license  https://opensource.org/licenses/MIT MIT
  * @version  GIT: &Id&
- * @link     https://github.com/Comertis/Cache
+ * @link     https://github.com/Subsession/Cache
  */
 
-namespace Comertis\Cache\Tests;
+namespace Subsession\Cache\Tests;
 
-use Comertis\Cache\Cache;
 use PHPUnit\Framework\TestCase;
+use Subsession\Cache\Cache;
 
 /**
  * Cache tests
  *
  * @category Caching
- * @package  Comertis\Cache
- * @author   Cristian Moraru <cristian@comertis.com>
+ * @package  Subsession\Cache
+ * @author   Cristian Moraru <cristian.moraru@live.com>
  * @license  https://opensource.org/licenses/MIT MIT
  * @version  Release: 1.0.0
- * @link     https://github.com/Comertis/Cache
+ * @link     https://github.com/Subsession/Cache
  */
 final class CacheTests extends TestCase
 {
@@ -55,13 +55,13 @@ final class CacheTests extends TestCase
      * @access private
      * @var    Cache
      */
-    private $_cache;
+    private $cache;
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->_cache = new Cache();
+        $this->cache = new Cache();
     }
 }

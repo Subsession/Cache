@@ -25,14 +25,14 @@
  * DEALINGS IN THE SOFTWARE.
  *
  * @category Caching
- * @package  Comertis\Cache
- * @author   Cristian Moraru <cristian@comertis.com>
+ * @package  Subsession\Cache
+ * @author   Cristian Moraru <cristian.moraru@live.com>
  * @license  https://opensource.org/licenses/MIT MIT
  * @version  GIT: &Id&
- * @link     https://github.com/Comertis/Cache
+ * @link     https://github.com/Subsession/Cache
  */
 
-namespace Comertis\Cache;
+namespace Subsession\Cache;
 
 use DateTime;
 use Psr\Cache\CacheItemInterface;
@@ -47,11 +47,11 @@ use Psr\Cache\CacheItemInterface;
  * Implementing Library.
  *
  * @category Caching
- * @package  Comertis\Cache
- * @author   Cristian Moraru <cristian@comertis.com>
+ * @package  Subsession\Cache
+ * @author   Cristian Moraru <cristian.moraru@live.com>
  * @license  https://opensource.org/licenses/MIT MIT
  * @version  Release: 1.0.0
- * @link     https://github.com/Comertis/Cache
+ * @link     https://github.com/Subsession/Cache
  */
 class CacheItem implements CacheItemInterface
 {
@@ -60,28 +60,28 @@ class CacheItem implements CacheItemInterface
      *
      * @var string
      */
-    private $_key;
+    private $key;
 
     /**
      * Cache item content
      *
      * @var mixed
      */
-    private $_value = null;
+    private $value = null;
 
     /**
      * Content expire DateTime
      *
      * @var DateTimeInterface
      */
-    private $_expiresAt;
+    private $expiresAt;
 
     /**
      * Flag indicating if the content is valid
      *
      * @var bool
      */
-    private $_isHit = false;
+    private $isHit = false;
 
     /**
      * Item constructor.
@@ -90,7 +90,7 @@ class CacheItem implements CacheItemInterface
      */
     public function __construct($key)
     {
-        $this->_key = $key;
+        $this->key = $key;
     }
 
     /**
@@ -104,7 +104,7 @@ class CacheItem implements CacheItemInterface
      */
     public function getKey()
     {
-        return $this->_key;
+        return $this->key;
     }
 
     /**
@@ -123,7 +123,7 @@ class CacheItem implements CacheItemInterface
     public function get()
     {
         if ($this->isHit()) {
-            return $this->_value;
+            return $this->value;
         }
 
         // expired
@@ -141,17 +141,17 @@ class CacheItem implements CacheItemInterface
      */
     public function isHit()
     {
-        if (!$this->_isHit) {
+        if (!$this->isHit) {
             return false;
         }
 
-        if (null === $this->_expiresAt) {
+        if (null === $this->expiresAt) {
             return true;
         }
 
         $now = new DateTime();
 
-        return $now < $this->_expiresAt;
+        return $now < $this->expiresAt;
     }
 
     /**
@@ -168,8 +168,8 @@ class CacheItem implements CacheItemInterface
      */
     public function set($value)
     {
-        $this->_isHit = true;
-        $this->_value = $value;
+        $this->isHit = true;
+        $this->value = $value;
 
         return $this;
     }
@@ -185,7 +185,7 @@ class CacheItem implements CacheItemInterface
      */
     public function expiresAt($expiration)
     {
-        $this->_expiresAt = $expiration;
+        $this->expiresAt = $expiration;
 
         return $this;
     }
@@ -202,13 +202,13 @@ class CacheItem implements CacheItemInterface
     public function expiresAfter($time)
     {
         if ($time instanceof \DateInterval) {
-            $this->_expiresAt = (new DateTime())->add($time);
+            $this->expiresAt = (new DateTime())->add($time);
         } elseif (is_numeric($time)) {
-            $this->_expiresAt = (new DateTime())->add(
+            $this->expiresAt = (new DateTime())->add(
                 new \DateInterval('PT' . $time . 'S')
             );
         } else {
-            $this->_expiresAt = null;
+            $this->expiresAt = null;
         }
 
         return $this;

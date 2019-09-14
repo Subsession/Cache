@@ -25,18 +25,18 @@
  * DEALINGS IN THE SOFTWARE.
  *
  * @category Caching
- * @package  Comertis\Cache
- * @author   Cristian Moraru <cristian@comertis.com>
+ * @package  Subsession\Cache
+ * @author   Cristian Moraru <cristian.moraru@live.com>
  * @license  https://opensource.org/licenses/MIT MIT
  * @version  GIT: &Id&
- * @link     https://github.com/Comertis/Cache
+ * @link     https://github.com/Subsession/Cache
  */
 
-namespace Comertis\Cache\Adapters;
+namespace Subsession\Cache\Adapters;
 
-use Comertis\Cache\Adapters\BaseCachePool;
-use Comertis\Cache\CacheItem;
 use Psr\Cache\CacheItemInterface;
+use Subsession\Cache\Adapters\BaseCachePool;
+use Subsession\Cache\CacheItem;
 
 /**
  * CacheItemPoolInterface generates CacheItemInterface objects.
@@ -48,11 +48,11 @@ use Psr\Cache\CacheItemInterface;
  * Implementing Library.
  *
  * @category Caching
- * @package  Comertis\Cache
- * @author   Cristian Moraru <cristian@comertis.com>
+ * @package  Subsession\Cache
+ * @author   Cristian Moraru <cristian.moraru@live.com>
  * @license  https://opensource.org/licenses/MIT MIT
  * @version  Release: 1.0.0
- * @link     https://github.com/Comertis/Cache
+ * @link     https://github.com/Subsession/Cache
  */
 class FileCachePool extends BaseCachePool
 {
@@ -61,14 +61,14 @@ class FileCachePool extends BaseCachePool
      *
      * @var CacheItemInterface[]
      */
-    private $_dStack;
+    private $dStack;
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->_dStack = [];
+        $this->dStack = [];
     }
 
     /**
@@ -100,11 +100,11 @@ class FileCachePool extends BaseCachePool
     {
         $this->assertValidKey($key);
 
-        if (isset($this->_dStack[$key])) {
-            return clone $this->_dStack[$key];
+        if (isset($this->dStack[$key])) {
+            return clone $this->dStack[$key];
         }
 
-        $file = @file_get_contents($this->_filenameFor($key));
+        $file = @file_get_contents($this->filenameFor($key));
 
         if (false !== $file) {
             return unserialize($file);
@@ -162,10 +162,10 @@ class FileCachePool extends BaseCachePool
     {
         $this->assertValidKey($key);
 
-        $itemInDeferredNotExpired = isset($this->_dStack[$key]) &&
-        $this->_dStack[$key]->isHit();
+        $itemInDeferredNotExpired = isset($this->dStack[$key]) &&
+        $this->dStack[$key]->isHit();
 
-        return $itemInDeferredNotExpired || file_exists($this->_filenameFor($key));
+        return $itemInDeferredNotExpired || file_exists($this->filenameFor($key));
     }
 
     /**
@@ -176,7 +176,7 @@ class FileCachePool extends BaseCachePool
      */
     public function clear()
     {
-        $this->_dStack = [];
+        $this->dStack = [];
 
         $result = true;
         foreach (glob($this->getFolder() . '/' . '*') as $key => $filename) {
@@ -202,11 +202,11 @@ class FileCachePool extends BaseCachePool
     {
         $this->assertValidKey($key);
 
-        if (isset($this->_dStack[$key])) {
-            unset($this->_dStack[$key]);
+        if (isset($this->dStack[$key])) {
+            unset($this->dStack[$key]);
         }
 
-        @unlink($this->_filenameFor($key));
+        @unlink($this->filenameFor($key));
 
         return true;
     }
@@ -250,7 +250,7 @@ class FileCachePool extends BaseCachePool
         }
 
         $bytes = file_put_contents(
-            $this->_filenameFor($item->getKey()),
+            $this->filenameFor($item->getKey()),
             serialize($item)
         );
 
@@ -268,7 +268,7 @@ class FileCachePool extends BaseCachePool
      */
     public function saveDeferred(CacheItemInterface $item)
     {
-        $this->_dStack[$item->getKey()] = $item;
+        $this->dStack[$item->getKey()] = $item;
 
         return true;
     }
@@ -284,9 +284,9 @@ class FileCachePool extends BaseCachePool
     {
         $result = true;
 
-        foreach ($this->_dStack as $key => $item) {
+        foreach ($this->dStack as $key => $item) {
             $result = $result && $this->save($item);
-            unset($this->_dStack[$key]);
+            unset($this->dStack[$key]);
         }
 
         return $result;
@@ -299,7 +299,7 @@ class FileCachePool extends BaseCachePool
      *
      * @return string
      */
-    private function _filenameFor($key)
+    private function filenameFor($key)
     {
         return sys_get_temp_dir() . DIRECTORY_SEPARATOR . $key;
     }

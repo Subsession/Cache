@@ -1,4 +1,4 @@
-# Comertis\Cache
+# Subsession\Cache
 
 PHP file caching system
 
@@ -7,7 +7,7 @@ PHP file caching system
 Install using `composer`:
 
 ```
-composer require comertis\cache
+composer require subsession\cache
 ```
 
 ## Running unit tests

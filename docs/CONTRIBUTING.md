@@ -1,3 +1,3 @@
-# Comertis\Cache Contributing guidelines
+# Subsession\Cache Contributing guidelines
 
 Work in progress...

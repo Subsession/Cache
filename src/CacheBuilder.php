@@ -25,31 +25,31 @@
  * DEALINGS IN THE SOFTWARE.
  *
  * @category Caching
- * @package  Comertis\Cache
- * @author   Cristian Moraru <cristian@comertis.com>
+ * @package  Subsession\Cache
+ * @author   Cristian Moraru <cristian.moraru@live.com>
  * @license  https://opensource.org/licenses/MIT MIT
  * @version  GIT: &Id&
- * @link     https://github.com/Comertis/Cache
+ * @link     https://github.com/Subsession/Cache
  */
 
-namespace Comertis\Cache;
+namespace Subsession\Cache;
 
-use Comertis\Cache\Adapters\APCuCachePool;
-use Comertis\Cache\Adapters\FileCachePool;
-use Comertis\Cache\Adapters\MemoryCachePool;
-use Comertis\Cache\Exceptions\CacheException;
 use Psr\Cache\CacheItemPoolInterface;
+use Subsession\Cache\Adapters\APCuCachePool;
+use Subsession\Cache\Adapters\FileCachePool;
+use Subsession\Cache\Adapters\MemoryCachePool;
+use Subsession\Cache\Exceptions\CacheException;
 
 /**
  * Creates a cache pool instance base on user selection or tries
  * to guess the best one.
  *
  * @category Caching
- * @package  Comertis\Cache
- * @author   Cristian Moraru <cristian@comertis.com>
+ * @package  Subsession\Cache
+ * @author   Cristian Moraru <cristian.moraru@live.com>
  * @license  https://opensource.org/licenses/MIT MIT
  * @version  Release: 1.0.0
- * @link     https://github.com/Comertis/Cache
+ * @link     https://github.com/Subsession/Cache
  */
 class CacheBuilder
 {
@@ -59,7 +59,7 @@ class CacheBuilder
 
     const DEFAULT_NAME = "DEFAULT";
 
-    private static $_instances = [];
+    private static $instances = [];
 
     /**
      * Build a CacheItemPoolInterface
@@ -74,11 +74,11 @@ class CacheBuilder
     public static function build($type = null, $name = self::DEFAULT_NAME)
     {
         if (null === $type) {
-            return self::_autoDiscovery();
+            return self::autoDiscovery();
         }
 
-        if (isset(self::$_instances[$type][$name])) {
-            return self::$_instances[$type][$name];
+        if (isset(self::$instances[$type][$name])) {
+            return self::$instances[$type][$name];
         }
 
         $instance = null;
@@ -86,26 +86,29 @@ class CacheBuilder
         switch ($type) {
             case self::MEMORY:
                 $instance = new MemoryCachePool();
+                break;
 
             case self::APCU:
-                if (!self::_isAPCuAvailable()) {
+                if (!self::isAPCuAvailable()) {
                     throw new CacheException("APCu is not available: not installed");
                 }
 
                 $instance = new APCuCachePool();
+                break;
 
             case self::FILE:
-                if (!self::_isFilesWritable()) {
+                if (!self::isFilesWritable()) {
                     throw new CacheException("Temp dir is not writable");
                 }
 
                 $instance = new FileCachePool();
+                break;
 
             default:
                 throw new CacheException("Invalid cache pool type");
         }
 
-        self::$_instances[$type][$name] = $instance;
+        self::$instances[$type][$name] = $instance;
 
         return $instance;
     }
@@ -119,9 +122,9 @@ class CacheBuilder
      * @access private
      * @return CacheItemPoolInterface
      */
-    private static function _autoDiscovery()
+    private static function autoDiscovery()
     {
-        if (self::_isFilesWritable()) {
+        if (self::isFilesWritable()) {
             return new FileCachePool();
         }
 
@@ -135,7 +138,7 @@ class CacheBuilder
      * @access private
      * @return bool
      */
-    private static function _isFilesWritable()
+    private static function isFilesWritable()
     {
         return is_writable(sys_get_temp_dir());
     }
@@ -145,7 +148,7 @@ class CacheBuilder
      *
      * @return bool
      */
-    private static function _isAPCuAvailable()
+    private static function isAPCuAvailable()
     {
         return (function_exists('apcu_fetch') || function_exists('apc_fetch'));
     }

@@ -25,18 +25,18 @@
  * DEALINGS IN THE SOFTWARE.
  *
  * @category Caching
- * @package  Comertis\Cache
- * @author   Cristian Moraru <cristian@comertis.com>
+ * @package  Subsession\Cache
+ * @author   Cristian Moraru <cristian.moraru@live.com>
  * @license  https://opensource.org/licenses/MIT MIT
  * @version  GIT: &Id&
- * @link     https://github.com/Comertis/Cache
+ * @link     https://github.com/Subsession/Cache
  */
 
-namespace Comertis\Cache\Adapters;
+namespace Subsession\Cache\Adapters;
 
-use Comertis\Cache\Adapters\BaseCachePool;
-use Comertis\Cache\CacheItem;
 use Psr\Cache\CacheItemInterface;
+use Subsession\Cache\Adapters\BaseCachePool;
+use Subsession\Cache\CacheItem;
 
 /**
  * Driver for APCu Cache
@@ -44,11 +44,11 @@ use Psr\Cache\CacheItemInterface;
  * apc_* function are supported by PHP5.6 and HHVM but not PHP7
  *
  * @category Caching
- * @package  Comertis\Cache
- * @author   Cristian Moraru <cristian@comertis.com>
+ * @package  Subsession\Cache
+ * @author   Cristian Moraru <cristian.moraru@live.com>
  * @license  https://opensource.org/licenses/MIT MIT
  * @version  Release: 1.0.0
- * @link     https://github.com/Comertis/Cache
+ * @link     https://github.com/Subsession/Cache
  */
 class APCuCachePool extends BaseCachePool
 {
@@ -57,21 +57,21 @@ class APCuCachePool extends BaseCachePool
      *
      * @var CacheItemInterface[]
      */
-    private $_dStack = [];
+    private $dStack = [];
 
     /**
      * Are we on a HHVM
      *
      * @var bool
      */
-    private $_legacy = false;
+    private $legacy = false;
 
     /**
      * APCuCache constructor.
      */
     public function __construct()
     {
-        $this->_legacy = ini_get('apc.enabled') && function_exists('apc_store');
+        $this->legacy = ini_get('apc.enabled') && function_exists('apc_store');
     }
 
     /**
@@ -101,11 +101,11 @@ class APCuCachePool extends BaseCachePool
     {
         $this->assertValidKey($key);
 
-        if (isset($this->_dStack[$key])) {
-            return clone $this->_dStack[$key];
+        if (isset($this->dStack[$key])) {
+            return clone $this->dStack[$key];
         }
 
-        if ($this->_legacy) {
+        if ($this->legacy) {
             $item = apc_fetch($key);
         } else {
             $item = apcu_fetch($key);
@@ -138,7 +138,7 @@ class APCuCachePool extends BaseCachePool
             $this->assertValidKey($key);
         }
 
-        if ($this->_legacy) {
+        if ($this->legacy) {
             $values = apc_fetch($keys);
         } else {
             $values = apcu_fetch($keys);
@@ -177,13 +177,13 @@ class APCuCachePool extends BaseCachePool
     {
         $this->assertValidKey($key);
 
-        if ($this->_legacy) {
+        if ($this->legacy) {
             $exists = apc_exists($key);
         } else {
             $exists = apcu_exists($key);
         }
 
-        return $this->_isItemInDeferred($key) || $exists;
+        return $this->isItemInDeferred($key) || $exists;
     }
 
     /**
@@ -194,9 +194,9 @@ class APCuCachePool extends BaseCachePool
      */
     public function clear()
     {
-        $this->_dStack = [];
+        $this->dStack = [];
 
-        if ($this->_legacy) {
+        if ($this->legacy) {
             return apc_clear_cache();
         } else {
             return apcu_clear_cache();
@@ -219,11 +219,11 @@ class APCuCachePool extends BaseCachePool
     {
         $this->assertValidKey($key);
 
-        if (isset($this->_dStack[$key])) {
-            unset($this->_dStack[$key]);
+        if (isset($this->dStack[$key])) {
+            unset($this->dStack[$key]);
         }
 
-        if ($this->_legacy) {
+        if ($this->legacy) {
             apc_delete($key);
         } else {
             apcu_delete($key);
@@ -270,7 +270,7 @@ class APCuCachePool extends BaseCachePool
             return false;
         }
 
-        if ($this->_legacy) {
+        if ($this->legacy) {
             $store = apc_store($item->getKey(), serialize($item));
         } else {
             $store = apcu_store($item->getKey(), serialize($item));
@@ -290,7 +290,7 @@ class APCuCachePool extends BaseCachePool
      */
     public function saveDeferred(CacheItemInterface $item)
     {
-        $this->_dStack[$item->getKey()] = $item;
+        $this->dStack[$item->getKey()] = $item;
 
         return true;
     }
@@ -306,9 +306,9 @@ class APCuCachePool extends BaseCachePool
     {
         $result = true;
 
-        foreach ($this->_dStack as $key => $item) {
+        foreach ($this->dStack as $key => $item) {
             $result = $result && $this->save($item);
-            unset($this->_dStack[$key]);
+            unset($this->dStack[$key]);
         }
 
         return $result;
@@ -321,10 +321,10 @@ class APCuCachePool extends BaseCachePool
      *
      * @return bool
      */
-    private function _isItemInDeferred($key)
+    private function isItemInDeferred($key)
     {
         // is in stack and not expired
-        return isset($this->_dStack[$key]) &&
-        $this->_dStack[$key]->isHit();
+        return isset($this->dStack[$key]) &&
+        $this->dStack[$key]->isHit();
     }
 }

@@ -1,21 +1,21 @@
 {
-  "name": "comertis/cache",
+  "name": "subsession/cache",
   "description": "A PHP caching system",
   "type": "library",
   "license": "MIT",
   "authors": [
     {
       "name": "Cristian Moraru",
-      "email": "cristian@comertis.com",
+      "email": "cristian.moraru@live.com",
       "role": "Developer"
     }
   ],
   "autoload": {
     "psr-4": {
-      "Comertis\\Cache\\": "src/",
-      "Comertis\\Cache\\Exceptions\\": "src/exceptions/",
-      "Comertis\\Cache\\Adapters\\": "src/adapters/",
-      "Comertis\\Cache\\Tests\\": "tests/"
+      "Subsession\\Cache\\": "src/",
+      "Subsession\\Cache\\Exceptions\\": "src/exceptions/",
+      "Subsession\\Cache\\Adapters\\": "src/adapters/",
+      "Subsession\\Cache\\Tests\\": "tests/"
     }
   },
   "minimum-stability": "stable",

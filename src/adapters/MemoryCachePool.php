@@ -25,17 +25,17 @@
  * DEALINGS IN THE SOFTWARE.
  *
  * @category Caching
- * @package  Comertis\Cache
- * @author   Cristian Moraru <cristian@comertis.com>
+ * @package  Subsession\Cache
+ * @author   Cristian Moraru <cristian.moraru@live.com>
  * @license  https://opensource.org/licenses/MIT MIT
  * @version  GIT: &Id&
- * @link     https://github.com/Comertis/Cache
+ * @link     https://github.com/Subsession/Cache
  */
 
-namespace Comertis\Cache\Adapters;
+namespace Subsession\Cache\Adapters;
 
-use Comertis\Cache\Adapters\BaseCachePool;
-use Comertis\Cache\CacheItem;
+use Subsession\Cache\Adapters\BaseCachePool;
+use Subsession\Cache\CacheItem;
 use Psr\Cache\CacheItemInterface;
 
 /**
@@ -48,11 +48,11 @@ use Psr\Cache\CacheItemInterface;
  * Implementing Library.
  *
  * @category Caching
- * @package  Comertis\Cache
- * @author   Cristian Moraru <cristian@comertis.com>
+ * @package  Subsession\Cache
+ * @author   Cristian Moraru <cristian.moraru@live.com>
  * @license  https://opensource.org/licenses/MIT MIT
  * @version  Release: 1.0.0
- * @link     https://github.com/Comertis/Cache
+ * @link     https://github.com/Subsession/Cache
  */
 class MemoryCachePool extends BaseCachePool
 {
