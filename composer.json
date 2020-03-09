@@ -6,21 +6,22 @@
   "authors": [
     {
       "name": "Cristian Moraru",
-      "email": "cristian.moraru@live.com"
+      "email": "cristian.moraru@live.com",
+      "role": "Developer"
     }
   ],
   "autoload": {
     "psr-4": {
       "Subsession\\Cache\\": "src/",
-      "Subsession\\Cache\\Exceptions\\": "src/exceptions",
-      "Subsession\\Cache\\Internal\\": "src/internal",
-      "Subsession\\Cache\\Internal\\Files\\": "src/internal/files",
+      "Subsession\\Cache\\Exceptions\\": "src/exceptions/",
+      "Subsession\\Cache\\Adapters\\": "src/adapters/",
       "Subsession\\Cache\\Tests\\": "tests/"
     }
   },
   "minimum-stability": "stable",
   "require": {
-    "php": ">=7.0.0"
+    "php": "^7.0.0",
+    "psr/cache": "^1.0"
   },
   "require-dev": {
     "phpunit/phpunit": "7"

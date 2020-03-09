@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHP Version 7
  *
@@ -34,10 +35,16 @@
 
 namespace Subsession\Cache;
 
-use Subsession\Cache\Internal\Files\FileManager;
+use Exception;
+use Psr\Cache\CacheItemPoolInterface;
+use Subsession\Cache\Adapters\APCuCachePool;
+use Subsession\Cache\Adapters\FileCachePool;
+use Subsession\Cache\Adapters\MemoryCachePool;
+use Subsession\Cache\Exceptions\CacheException;
 
 /**
- * Internal class responsible for handling cache files
+ * Creates a cache pool instance base on user selection or tries
+ * to guess the best one.
  *
  * @category Caching
  * @package  Subsession\Cache
@@ -48,109 +55,112 @@ use Subsession\Cache\Internal\Files\FileManager;
  */
 class CacheBuilder
 {
-    /**
-     * FileManager instance
-     *
-     * @access private
-     * @var    FileManager
-     */
-    private $fileManager;
+    const MEMORY = 0;
+    const FILE = 1;
+    const APCU = 2;
 
-    /**
-     * Directory for cache files
-     *
-     * @access private
-     * @var    string
-     */
-    private static $path;
+    const DEFAULT_NAME = "DEFAULT";
 
-    /**
-     * Internal array of Cache keys and their CacheConfiguration
-     *
-     * @static
-     * @access private
-     * @var    array
-     */
     private static $instances = [];
 
     /**
-     * Default directory for cache files
+     * Build a CacheItemPoolInterface
      *
-     * @access public
-     * @var    string
-     */
-    const DEFAULT_PATH = "cache/";
-
-    /**
-     * DateTime format used for expire time of cache files
+     * Example:
+     * ```php
+     * // File cache for products
+     * // Creates new one if not already present,
+     * // retrieved from memory if already created previously
+     * $cache = CacheBuilder::build("products", CacheBuilder::FILE);
+     * ```
      *
-     * @access public
-     * @var    string
-     */
-    const DATETIME_FORMAT = "Y-m-d\TH:i:s.u";
-
-    /**
-     * Constructor defaults:
-     *      $this->fileManager = new FileManager();
-     *      $this->path = self::DEFAULT_PATH;
-     */
-    public function __construct()
-    {
-        $this->fileManager = new FileManager();
-        $this->path = self::DEFAULT_PATH;
-    }
-
-    /**
-     * Destructor
-     */
-    public function __destruct()
-    {
-        foreach ($this as $key => $value) {
-            unset($this->$key);
-        }
-    }
-
-    /**
-     * Get the cache directory
-     *
-     * @access public
-     * @return string
-     */
-    public function getPath()
-    {
-        return $this->path;
-    }
-
-    /**
-     * Set the cache directory
-     *
-     * @param string $path Cache directory
-     *
-     * @access public
-     * @return CacheBuilder
-     */
-    public function setPath($path)
-    {
-        $this->path = $path;
-        $this->fileManager->setPath($path);
-
-        return $this;
-    }
-
-    /**
-     * Create a new Cache instance
-     *
-     * @param string             $name          Name of the new Cache instance
-     * @param CacheConfiguration $configuration Cache configuration
+     * @param string      $name Cache name
+     * @param string|null $type Cache type
      *
      * @static
      * @access public
-     * @return Cache
+     * @throws CacheException
+     * @return CacheItemPoolInterface
      */
-    public static function create($name, CacheConfiguration $configuration)
+    public static function build($name = self::DEFAULT_NAME, $type = self::MEMORY)
     {
-        $instance = new Cache($name);
+        $instance = null;
 
-        self::$instances[$name] = $configuration;
+        if (null === $type) {
+            $instance = static::autoDiscovery();
+        }
+
+        if (isset(static::$instances[$name][$type])) {
+            return static::$instances[$name][$type];
+        }
+
+        switch ($type) {
+            case static::MEMORY:
+                $instance = new MemoryCachePool();
+                break;
+
+            case static::APCU:
+                if (!static::isAPCuAvailable()) {
+                    throw new Exception("APCu is not available: not installed");
+                }
+
+                $instance = new APCuCachePool();
+                break;
+
+            case static::FILE:
+                if (!static::isFilesWritable()) {
+                    throw new Exception("Temp dir is not writable");
+                }
+
+                $instance = new FileCachePool();
+                break;
+
+            default:
+                throw new Exception("Invalid cache pool type");
+        }
+
+        static::$instances[$name][$type] = $instance;
+
+        return $instance;
+    }
+
+    /**
+     * Auto discover the best type of cache to use
+     *
+     * @throws CacheException
+     *
+     * @static
+     * @access private
+     * @return CacheItemPoolInterface
+     */
+    private static function autoDiscovery()
+    {
+        if (static::isFilesWritable()) {
+            return new FileCachePool();
+        }
+
+        return new MemoryCachePool();
+    }
+
+    /**
+     * Determine if the system temp directory is writable
+     *
+     * @static
+     * @access private
+     * @return bool
+     */
+    private static function isFilesWritable()
+    {
+        return is_writable(sys_get_temp_dir());
+    }
+
+    /**
+     * Check if APCu can be used
+     *
+     * @return bool
+     */
+    private static function isAPCuAvailable()
+    {
+        return (function_exists('apcu_fetch') || function_exists('apc_fetch'));
     }
 }

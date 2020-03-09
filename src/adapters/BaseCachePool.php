@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHP Version 7
  *
@@ -32,39 +33,55 @@
  * @link     https://github.com/Subsession/Cache
  */
 
-namespace Subsession\Cache\Exceptions;
+namespace Subsession\Cache\Adapters;
+
+use Psr\Cache\CacheItemPoolInterface;
+use Psr\Cache\InvalidArgumentException;
 
 /**
- * Custom exception
+ * CacheItemPoolInterface generates CacheItemInterface objects.
  *
- * @category Exceptions
+ * The primary purpose of Cache\CacheItemPoolInterface is to accept a key from
+ * the Calling Library and return the associated Cache\CacheItemInterface object.
+ * It is also the primary point of interaction with the entire cache collection.
+ * All configuration and initialization of the Pool is left up to an
+ * Implementing Library.
+ *
+ * @category Caching
  * @package  Subsession\Cache
  * @author   Cristian Moraru <cristian.moraru@live.com>
  * @license  https://opensource.org/licenses/MIT MIT
  * @version  Release: 1.0.0
  * @link     https://github.com/Subsession/Cache
  */
-class FileReaderException extends Exception
+abstract class BaseCachePool implements CacheItemPoolInterface
 {
-    /**
-     * Constructor
-     *
-     * @param string    $message  Exception message
-     * @param integer   $code     Exception code
-     * @param Exception $previous Previous exception
-     */
-    public function __construct($message, $code = 0, Exception $previous = null)
-    {
-        parent::__construct($message, $code, $previous);
-    }
+    const INVALID_KEY_PATTERN = "{}()/\@:";
 
     /**
-     * Override __toString
+     * Checks if a key is valid for APCu cache storage
      *
-     * @return string
+     * @param string $key Cache item key
+     *
+     * @throws InvalidArgumentException
+     *   If the $key string is not a legal value a
+     *   \Psr\Cache\InvalidArgumentException MUST be thrown.
+     *
+     * @return bool
      */
-    public function __toString()
+    protected function assertValidKey($key)
     {
-        return __CLASS__ . ": [{$this->code}]: {$this->message}\n";
+        if (!is_string($key) || empty($key)) {
+            throw new InvalidArgumentException("Invalid key");
+        }
+
+        if (preg_match(
+            '/[' . preg_quote(self::INVALID_KEY_PATTERN, '/') . ']/',
+            $key
+        )) {
+            throw new InvalidArgumentException("Invalid key");
+        }
+
+        return true;
     }
 }
