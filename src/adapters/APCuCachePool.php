@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHP Version 7
  *
@@ -37,6 +38,9 @@ namespace Subsession\Cache\Adapters;
 use Psr\Cache\CacheItemInterface;
 use Subsession\Cache\Adapters\BaseCachePool;
 use Subsession\Cache\CacheItem;
+
+use apc_fetch;
+use apcu_fetch;
 
 /**
  * Driver for APCu Cache
@@ -149,7 +153,7 @@ class APCuCachePool extends BaseCachePool
         if (false !== $values) {
             foreach ($keys as $key) {
                 $items[$key] = isset($values[$key]) ?
-                unserialize($values[$key]) : new CacheItem($key);
+                    unserialize($values[$key]) : new CacheItem($key);
             }
         }
 
@@ -325,6 +329,6 @@ class APCuCachePool extends BaseCachePool
     {
         // is in stack and not expired
         return isset($this->dStack[$key]) &&
-        $this->dStack[$key]->isHit();
+            $this->dStack[$key]->isHit();
     }
 }

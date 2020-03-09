@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHP Version 7
  *
@@ -163,7 +164,7 @@ class FileCachePool extends BaseCachePool
         $this->assertValidKey($key);
 
         $itemInDeferredNotExpired = isset($this->dStack[$key]) &&
-        $this->dStack[$key]->isHit();
+            $this->dStack[$key]->isHit();
 
         return $itemInDeferredNotExpired || file_exists($this->filenameFor($key));
     }
@@ -179,7 +180,7 @@ class FileCachePool extends BaseCachePool
         $this->dStack = [];
 
         $result = true;
-        foreach (glob($this->getFolder() . '/' . '*') as $key => $filename) {
+        foreach (glob(sys_get_temp_dir() . DIRECTORY_SEPARATOR . '*') as $key => $filename) {
             $result = $result && unlink($filename);
         }
 

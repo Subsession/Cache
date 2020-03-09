@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHP Version 7
  *
@@ -34,6 +35,7 @@
 
 namespace Subsession\Cache;
 
+use Exception;
 use Psr\Cache\CacheItemPoolInterface;
 use Subsession\Cache\Adapters\APCuCachePool;
 use Subsession\Cache\Adapters\FileCachePool;
@@ -64,51 +66,60 @@ class CacheBuilder
     /**
      * Build a CacheItemPoolInterface
      *
-     * @param null $type Cache type
+     * Example:
+     * ```php
+     * // File cache for products
+     * // Creates new one if not already present,
+     * // retrieved from memory if already created previously
+     * $cache = CacheBuilder::build("products", CacheBuilder::FILE);
+     * ```
+     *
+     * @param string      $name Cache name
+     * @param string|null $type Cache type
      *
      * @static
      * @access public
      * @throws CacheException
      * @return CacheItemPoolInterface
      */
-    public static function build($type = null, $name = self::DEFAULT_NAME)
+    public static function build($name = self::DEFAULT_NAME, $type = self::MEMORY)
     {
-        if (null === $type) {
-            return self::autoDiscovery();
-        }
-
-        if (isset(self::$instances[$type][$name])) {
-            return self::$instances[$type][$name];
-        }
-
         $instance = null;
 
+        if (null === $type) {
+            $instance = static::autoDiscovery();
+        }
+
+        if (isset(static::$instances[$name][$type])) {
+            return static::$instances[$name][$type];
+        }
+
         switch ($type) {
-            case self::MEMORY:
+            case static::MEMORY:
                 $instance = new MemoryCachePool();
                 break;
 
-            case self::APCU:
-                if (!self::isAPCuAvailable()) {
-                    throw new CacheException("APCu is not available: not installed");
+            case static::APCU:
+                if (!static::isAPCuAvailable()) {
+                    throw new Exception("APCu is not available: not installed");
                 }
 
                 $instance = new APCuCachePool();
                 break;
 
-            case self::FILE:
-                if (!self::isFilesWritable()) {
-                    throw new CacheException("Temp dir is not writable");
+            case static::FILE:
+                if (!static::isFilesWritable()) {
+                    throw new Exception("Temp dir is not writable");
                 }
 
                 $instance = new FileCachePool();
                 break;
 
             default:
-                throw new CacheException("Invalid cache pool type");
+                throw new Exception("Invalid cache pool type");
         }
 
-        self::$instances[$type][$name] = $instance;
+        static::$instances[$name][$type] = $instance;
 
         return $instance;
     }
@@ -124,7 +135,7 @@ class CacheBuilder
      */
     private static function autoDiscovery()
     {
-        if (self::isFilesWritable()) {
+        if (static::isFilesWritable()) {
             return new FileCachePool();
         }
 

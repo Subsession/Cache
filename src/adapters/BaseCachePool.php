@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHP Version 7
  *
@@ -77,8 +78,7 @@ abstract class BaseCachePool implements CacheItemPoolInterface
         if (preg_match(
             '/[' . preg_quote(self::INVALID_KEY_PATTERN, '/') . ']/',
             $key
-        )
-        ) {
+        )) {
             throw new InvalidArgumentException("Invalid key");
         }
 

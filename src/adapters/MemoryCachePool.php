@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHP Version 7
  *
@@ -120,7 +121,6 @@ class MemoryCachePool extends BaseCachePool
         $items = [];
 
         foreach ($keys as $key => $value) {
-            $this->assertValidKey($value);
             $items[$value] = $this->getItem($value);
         }
 
@@ -148,12 +148,10 @@ class MemoryCachePool extends BaseCachePool
         $this->assertValidKey($key);
 
         $itemInDeferredNotExpired = isset($this->dStack[$key]) &&
-        $this->dStack[$key]->isHit();
+            $this->dStack[$key]->isHit();
 
-        return (
-            $itemInDeferredNotExpired ||
-            (isset($this->stack[$key]) && $this->stack[$key]->isHit())
-        );
+        return ($itemInDeferredNotExpired ||
+            (isset($this->stack[$key]) && $this->stack[$key]->isHit()));
     }
 
     /**
@@ -214,7 +212,6 @@ class MemoryCachePool extends BaseCachePool
         $result = true;
 
         foreach ($keys as $key => $value) {
-            $this->assertValidKey($value);
             $result = $result && $this->deleteItem($value);
         }
 
